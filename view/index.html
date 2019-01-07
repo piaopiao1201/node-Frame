@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<a href="./niubi.jpg">图片</a>
+	<label for='videoSrc'>视频地址:</label><input type="text" name="videoSrc" id='videoSrc'>
+	<input type="button" name="" onclick="send()" value="提交">
+	<div class='res'></div>
+	<script type="text/javascript" src='js/axios.min.js'></script>
+	<script type="text/javascript" src='js/jquery.min.js'></script>
+	<script type="text/javascript">
+		var oRes=document.getElementsByClassName('res')[0];
+			//send();
+			
+			//document.write(13);
+		
+		function send(){
+			var oInput=document.querySelector('input[name="videoSrc"]');
+			console.log(oInput.value);
+			var data={
+				src:oInput.value
+			};
+				$.ajax({
+					type: "post",
+					url: "/downloadMp4",
+					contentType: 'application/json',
+					data: JSON.stringify(data),
+					dataType: "text",
+					success: function(data){
+						console.log(data);
+						setTimeout(autoShow,100);
+						//console.log(data);
+						//document.body.innerText=data*1;
+						
+					}
+				})
+			}
+
+		function autoShow(){
+			$.ajax({
+					type: "get",
+					url: "/getProgress",
+					data: '',
+					dataType: "text",
+					success: function(data){
+						oRes.innerText=data+'%';
+						if(Number(data)>=100){
+							alert('下载完毕')
+						}else{
+							setTimeout(autoShow,100);
+						}
+						//console.log(data);
+						//document.body.innerText=data*1;
+						
+					}
+				})
+		}	
+	</script>
+</body>
+</html>
